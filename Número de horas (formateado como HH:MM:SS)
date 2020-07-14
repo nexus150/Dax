@@ -1,0 +1,11 @@
+Total de horas con formato := 
+
+var horas_con_decimal = sumx(Table, Table[TimeColumn] * 86400) / 3600
+
+var horas_entero = int(horas_con_decimal)
+var minutos_con_decimal = horas_con_decimal - horas_entero
+var minutos_entero = int(minutos_con_decimal*60)
+var segundos =  ( (minutos_con_decimal*60) - int(minutos_con_decimal*60) ) * 60
+var retorno = format(horas_entero, "00") & ":" & format(minutos_entero, "00") & ":" & format(segundos, "00")
+return
+retorno
