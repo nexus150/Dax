@@ -1,0 +1,16 @@
+/*Columna calculada que sirve para secuenciar eventos en una tabla de tipo log o workflow, 
+para facilitar luego el calculo de otras columnas calculadas */
+
+Secuencia = 
+VAR proceso_id = Process[process_id]
+VAR create_fecha = Process[created_at] // La fecha utilizada para secuenciar
+var index = Process[Index] // cualquier campo que sirva para desempatar en caso de fechas iguales
+var sec = COUNTROWS( FILTER ( Process , Process[process_id]= proceso_id && Process[created_at] < create_fecha ) )
+var desempate =  
+    COUNTROWS(
+    FILTER ( Process , Process[process_id]= proceso_id && Process[created_at] = create_fecha && Process[Index] < index ) 
+
+ 
+    )
+var retorno = sec + desempate + 1
+return retorno
