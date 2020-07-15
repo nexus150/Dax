@@ -1,0 +1,9 @@
+/*Teniendo un campo de secuencia en una tabla de estilo Workflow, esta columna calculada puede traer cualquier campo del registro anterior del proceso
+o de cualquiera de los anteriores
+*/
+
+Fin movimiento = 
+var proceso_id= Process[proceso_id]
+var sec = Process[Secuencia]
+var data_ini_sig = MAXX( FILTER ( Process, Process[user_id]= proceso_id && Process[Secuencia]= sec + 1) , Process[created_at])
+return data_ini_sig
