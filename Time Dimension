@@ -1,0 +1,42 @@
+Hour = 
+
+VAR Opening = 9
+VAR Closing = 18
+//Time Slot 
+VAR TimeSlot = 5
+VAR Offset = ( TimeSlot / 2 )
+RETURN
+    GENERATE (
+        GENERATESERIES ( 0, 1439, 1 ),
+        // 24 hours/day * 60 minutes/hour = 1,440 - 1 (initial time 12am)
+        VAR __Minutes = [Value]
+        VAR __Time =
+            TIME ( 0, __Minutes, 0 )
+        // MROUND: Rounds Value to the nearest multiple of TimeSlot
+        VAR __MinutesRounded =
+            MROUND ( ( __Minutes + Offset ), TimeSlot )
+        VAR __StartTimeSlotRounded =
+            TIME ( 0, __MinutesRounded - TimeSlot, 0 )
+        VAR __EndTimeSlotRounded =
+            TIME ( 0, __MinutesRounded, 0 )
+        RETURN
+            ROW (
+                    "Hour", HOUR ( __Time ),
+                    "Minute", MINUTE ( __Time ),
+                    "Hour Minute 24h", FORMAT ( __Time, "hh:mm" ),
+                    "Hour Minute 12h", FORMAT ( __Time, "hh:mm AM/PM" ),
+                    "Span 05 Minutes begin", FORMAT ( __StartTimeSlotRounded, "hh:mm" ),
+                    "Span 05 Minutes end", FORMAT ( __EndTimeSlotRounded, "hh:mm" ),
+                    "Span 05 Minutes", FORMAT ( __StartTimeSlotRounded, "hh:mm" ) & "-"
+                        & FORMAT ( __EndTimeSlotRounded, "hh:mm" ),
+                    "Working Hours", IF (
+                        ( __Minutes / 60 ) >= Opening
+                            && ( __Minutes / 60 ) <= Closing,
+                        "Yes",
+                        "No"
+                    ),
+                    "Full Hour", __Time,
+                    "Span Begin", __StartTimeSlotRounded,
+                    "Span End", __EndTimeSlotRounded
+            )
+    )
