@@ -1,0 +1,11 @@
+define
+var number = 15 // number to prepare for sort.
+var lenNumber = LEN(INT(number)) // Get the number of digits of the integer part of the number (can be done in any other way)
+var numberFormat = FORMAT(number, "0.00;-0.00;0.00") // format the number as you want to see it
+var MaxDigits= 20 // digits of the largest possible number (or just 20)
+var preSpaces= REPT( UNICHAR(8203) , MaxDigits - lenNumber ) // Concatenate blanks to the number until you reach Maximum Digits
+var retorno = preSpaces & numberFormat
+evaluate
+{
+retorno
+}
