@@ -1,0 +1,38 @@
+1) /*Crear esta Tabla*/
+
+DataTable
+(
+    "Id", INTEGER, 
+    "analitica", STRING, 
+    "desc", STRING, 
+    "desc abrv", STRING, 
+    "desc castellano", STRING,  
+    {
+        {1, "MEAN", "MEAN","MEAN", "Media"},
+        {2, "STDEV", "STDEV","Desviación estandar", "Desviación estandar"},
+        {3, "MIN", "MIN","MIN", "Minimo"},
+        {4, "Q1", "Q1","Primer quartil", "Primer Cuartil"},
+        {5, "MEDIAN", "MEDIAN","Segundo Cuartil quartil", "Mediana"},
+        {6, "Q3", "Q3","Tercer Cuartil", "Tercer Cuartil"},
+        {7, "MAX", "MAX","MAX", "Máximo"}
+    }
+)
+
+2) /*Y luego esta médida, las medidas internas también pueden ser dinámicas con otro selector*/
+
+Estadisticos Dinamicos
+VAR analitica = SELECTEDVALUE(Analiticas[analitica])
+--var retorno = analitica
+var retorno =
+SWITCH ( 
+    (TRUE) ,
+    analitica = "MEAN", AVERAGEX ( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos ) ,
+    analitica = "STDEV", STDEVX.P( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos ) ,
+    analitica = "MIN", MINX ( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos ) ,
+    analitica = "Q1", PERCENTILEX.INC ( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos, 0.25 ),
+    analitica = "MEDIAN", PERCENTILEX.INC ( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos, 0.5 ),
+    analitica = "Q3", PERCENTILEX.INC ( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos, 0.75 ),
+    analitica = "MAX", MAXX ( VALUES('Clientes'[id cliente] ) , [Total Compras] + [Total Impuestos)
+    
+)
+RETURN retorno
