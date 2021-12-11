@@ -1,0 +1,17 @@
+EVALUATE 
+VAR _valor = 4 
+VAR _valor_2 = 5 
+RETURN 
+    { 
+        MAXX ( 
+            { 
+                [# Quantity], 
+                [Total Cost], 
+                2, 
+                3, 
+                _valor, 
+                _valor_2 
+            }, 
+            [value] 
+        ) 
+    }
