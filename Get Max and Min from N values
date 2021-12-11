@@ -9,8 +9,9 @@ RETURN
                 [Total Cost], 
                 2, 
                 3, 
-                _valor, 
-                _valor_2 
+                _valor,
+                CALCULATE (SUM(Sales[Net Price])),
+                _valor_2
             }, 
             [value] 
         ) 
