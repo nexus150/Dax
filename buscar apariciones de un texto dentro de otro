@@ -1,0 +1,26 @@
+/*
+Creada por : Ricardo Rincón, BITODATA.COM
+Esta formula permite saber la aparición de una cadena dentro de otra cadena, incluyendo todas las posiciones donde aparece, todas las veces que aparezca
+*/
+/*
+Created by : Ricardo Rincón, BITODATA.COM
+This formula allows to know the occurrence of a string inside another string, including all the positions where it appears, as many times as it appears
+*/
+EVALUATE
+{
+    VAR texto = "21021022334"
+    VAR buscar = "21"
+    VAR largo =
+        LEN ( texto )
+    VAR largo_busqueda = LEN(buscar)   
+    VAR tab =
+        GENERATESERIES ( 1, largo, 1 )
+    RETURN
+        CONCATENATEX (
+            tab,
+            IF (
+                FIND ( buscar, MID ( texto, [Value],largo_busqueda ),, -1 ) <> -1,
+                FORMAT ( [Value], "@" ) & "|"
+            )
+        )
+}
