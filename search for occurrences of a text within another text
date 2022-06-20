@@ -1,0 +1,42 @@
+/*
+Created by : Ricardo Rincón, BITODATA.COM
+https://www.linkedin.com/in/nexus150/
+This formula allows to know the occurrence of a string inside another string, including all the positions where it appears, as many times as it appears
+*/
+
+/*Result as string*/
+EVALUATE
+{
+    VAR texto = "2102AB10223AB34"
+    VAR text_to_search = "AB"
+    VAR text_size =
+        LEN ( texto )
+    VAR text_to_search_size =
+        LEN ( text_to_search )
+    VAR tab =
+        GENERATESERIES ( 1, text_size - ( text_to_search_size - 1 ), 1 )
+    RETURN
+        CONCATENATEX (
+            tab,
+            IF (
+                FIND ( text_to_search, MID ( texto, [Value], text_to_search_size ),, -1 ) <> -1,
+                FORMAT ( [Value], "@" ) & "|"
+            )
+        )
+}
+
+/*Result as table*/
+EVALUATE
+    VAR texto = "2102AB10223AB34"
+    VAR text_to_search = "AB"
+    VAR text_size =
+        LEN ( texto )
+    VAR text_to_search_size =
+        LEN ( text_to_search )
+    VAR tab =
+        GENERATESERIES ( 1, text_size - ( text_to_search_size - 1 ), 1 )
+    RETURN
+        filter (
+            tab, FIND ( text_to_search, MID ( texto, [Value], text_to_search_size ),, -1 ) <> -1
+
+        )
