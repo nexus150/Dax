@@ -1,0 +1,19 @@
+Sales amount accum by prod and client FAST =
+VAR _score_Attr = [Total Score Attr]
+VAR _products_to_sum =
+    ALLSELECTED ( 'Product'[ProductKey] )
+VAR _customers_to_sum =
+    ALLSELECTED ( Customer[CustomerKey] )
+VAR _cross_prod_custom =
+    CROSSJOIN ( _products_to_sum, _customers_to_sum )
+VAR _totals =
+    ADDCOLUMNS (
+        _cross_prod_custom,
+        "@rank", CALCULATE ( RANKX ( _cross_prod_custom, [Total Score Attr],, asc, DENSE ) )
+    )
+VAR _rankx =
+    RANKX ( _cross_prod_custom, [Total Score Attr],, asc, DENSE )
+ var _acum = ADDCOLUMNS(_totals, "acum", var _rank_previo = [@rank] return sumx(filter(_totals, [@rank]>=_rank_previo ),[Total Score Attr] ) ) 
+RETURN 
+    maxx(filter(_acum, 
+        'Product'[ProductKey] = SELECTEDVALUE('Product'[ProductKey]) && Customer[CustomerKey] = SELECTEDVALUE(Customer[CustomerKey]) ), [acum] ) 
