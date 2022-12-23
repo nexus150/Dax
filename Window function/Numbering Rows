@@ -1,0 +1,59 @@
+/*Numera de 1 a N partiendo desde una tabla de hechos para extraer sus dimensiones con SUmmarize*/
+Row Number Abs 2 : = 
+SUMX(
+    WINDOW (
+        0,
+        REL,    // 0 and REL indicate every current row 
+        -1,
+        ABS,    // -1 and ABS indicate the very last row in the partition that is described in the last parameter in the function
+        SUMMARIZE (
+            ALL ( sales ),
+            'Date'[Year],
+            'Product'[Model],
+            'Sales Territory'[Country]
+        ),
+        ORDERBY ( 'Date'[Year] , desc, 'Product'[Model], desc, 'Sales Territory'[Country] , desc ),
+        KEEP
+    ),
+    1
+)
+
+/*Numera de 1 a N combinando las dimensiones y filtrando por medida combinaciones validas*/
+Row Number Abs : = 
+SUMX(
+    WINDOW (
+        0,
+        REL,    // 0 and REL indicate every current row 
+        -1,
+        ABS,    // -1 and ABS indicate the very last row in the partition that is described in the last parameter in the function
+        filter(crossjoin (
+            ALLSELECTED('Date'[Year]),
+            ALLSELECTED('Product'[Model]),
+            ALLSELECTED('Sales Territory'[Country])
+        ), [Sum of Sales Amount]),
+        ORDERBY ( 'Date'[Year] , desc, 'Product'[Model], desc, 'Sales Territory'[Country] , desc ),
+        KEEP
+    ),
+    1
+)
+
+/*Numera los meses del 1 al 12 por cada año*/
+Row Number : = 
+SUMX(
+ WINDOW (
+ 0,
+ REL,    // 0 and REL indicate every current row 
+ -1,
+ ABS,    // -1 and ABS indicate the very last row in the partition that is described in the last parameter in the function
+ SUMMARIZE (
+ ALLNOBLANKROW( 'Date'),
+ 'Date'[Year],
+ 'Date'[Month],'Date'[MonthKey]
+ 
+ ),
+ ORDERBY ( 'Date'[Year], desc, 'Date'[MonthKey] ,desc ),
+ KEEP,
+ PARTITIONBY ( 'Date'[Year] )   // it partitions the range 
+ ),
+ 1
+)
