@@ -1,0 +1,3 @@
+HorasSigEstado = 
+var _fechaAnterior = MAXX(OFFSET(-1,ALLSELECTED('CambioEstado (excel)'[IdContrato],'CambioEstado (excel)'[Fecha]),ORDERBY('CambioEstado (excel)'[Fecha]),KEEP,PARTITIONBY('CambioEstado (excel)'[IdContrato])),'CambioEstado (excel)'[Fecha])
+var _fechaActual = 'CambioEstado (excel)'[Fecha]
