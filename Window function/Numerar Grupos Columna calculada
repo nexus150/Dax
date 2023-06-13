@@ -1,0 +1,50 @@
+//Columna Calculada
+Num Grupo = 
+var _dia = Tabla_demo[date]
+var _previos = filter(Tabla_demo, Tabla_demo[date] <= _dia)
+var _mp_anterior = ADDCOLUMNS(_previos, "MP Previo", CALCULATE(MAXX(WINDOW(1, rel, 1, rel, ALLSELECTED(Tabla_demo[date], Tabla_demo[mp]), ORDERBY(Tabla_demo[date],DESC), KEEP), Tabla_demo[mp] ) ))
+var _nuevos = filter(_mp_anterior, (Tabla_demo[mp] <> [MP Previo]) && Tabla_demo[mp] = "I")
+var _Resultado = IF(Tabla_demo[mp] <> "", COUNTROWS(_nuevos))
+return _Resultado
+
+/*
+Tabla para probar
+let
+    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("Zc7bCYAwEETRXvIdyM7E+CjBGiT9t2FAEM2F/TrMDnNdqUaRi8NOOaWeh2iWUBk3pL7ij5wPVdJCaqQV7RtDO+mY/xQISSRuV0UVp6shhOXaIDvkQLVjDpm77V+o3w==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [date = _t, mp = _t]),
+    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"date", type date}, {"mp", type text}})
+in
+    #"Tipo cambiado"
+
+*/
+
+/*
+Resultado
+
+date	mp	Num Grupo
+2022-12-30 00:00:00,000	""	
+2022-12-31 00:00:00,000	""	
+2023-01-01 00:00:00,000	""	
+2023-01-02 00:00:00,000	"I"	1
+2023-01-03 00:00:00,000	"I"	1
+2023-01-04 00:00:00,000	"I"	1
+2023-01-05 00:00:00,000	"I"	1
+2023-01-06 00:00:00,000	""	
+2023-01-07 00:00:00,000	"I"	2
+2023-01-08 00:00:00,000	"I"	2
+2023-01-09 00:00:00,000	""	
+2023-01-10 00:00:00,000	"I"	3
+2023-01-11 00:00:00,000	"I"	3
+2023-01-12 00:00:00,000	"I"	3
+2023-01-13 00:00:00,000	""	
+2023-01-14 00:00:00,000	"I"	4
+2023-01-15 00:00:00,000	""	
+2023-01-16 00:00:00,000	""	
+2023-01-17 00:00:00,000	""	
+2023-01-18 00:00:00,000	""	
+2023-01-19 00:00:00,000	"I"	5
+2023-01-20 00:00:00,000	""	
+2023-01-21 00:00:00,000	"I"	6
+2023-01-22 00:00:00,000	""	
+
+
+*/
