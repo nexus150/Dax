@@ -1,0 +1,45 @@
+DEFINE
+    VAR _texto_orig = "21,02AB1,022,3AB,34,34234324234,adsasdsadsa,6567657,dfsdfsdfsdf21,02AB1,022,3AB,34,34234324234,adsasdsadsa,6567657,dfsdfsdfsdf"
+    VAR _buscar = ","
+    VAR _texto = _texto_orig & _buscar
+    VAR _largo =
+        LEN ( _texto )
+    VAR _largo_busqueda =
+        LEN ( _buscar )
+    VAR _tab =
+        GENERATESERIES ( 1, _largo - ( _largo_busqueda - 1 ), 1 )
+    VAR _tab_filtrada =
+        FILTER (
+            _tab,
+            FIND ( _buscar, MID ( _texto, [Value], _largo_busqueda ),, -1 ) <> -1
+        )
+    VAR _rangos =
+        ADDCOLUMNS (
+            _tab_filtrada,
+            "@anterior",
+                VAR _pos = [value]
+                VAR _fila_previa =
+                    FILTER ( _tab_filtrada, [value] < _pos )
+                RETURN
+                    COALESCE ( MAXX ( _fila_previa, [value] ), 0 )
+        )
+    VAR _tabla_final =
+        ADDCOLUMNS (
+            _rangos,
+            "@valor",
+                MID ( _texto, [@anterior] + 1, [value] - [@anterior] - 1 )
+        )
+    VAR _columna_final =
+        SELECTCOLUMNS ( _tabla_final, [@valor] )
+
+EVALUATE
+_tab_filtrada
+
+EVALUATE
+_rangos
+
+EVALUATE
+_Tabla_final
+
+EVALUATE
+_columna_final
