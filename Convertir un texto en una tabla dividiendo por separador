@@ -27,7 +27,12 @@ DEFINE
         ADDCOLUMNS (
             _rangos,
             "@valor",
-                MID ( _texto, [@anterior] + 1, [value] - [@anterior] - 1 )
+                VAR _desde =
+                    IF ( [@anterior] = 0, 1, [@anterior] + _largo_busqueda )
+                VAR _hasta =
+                    IF ( [@anterior] = 0, [value] - 1, [value] - [@anterior] - _largo_busqueda )
+                RETURN
+                    MID ( _texto, _desde, _hasta )
         )
     VAR _columna_final =
         SELECTCOLUMNS ( _tabla_final, [@valor] )
