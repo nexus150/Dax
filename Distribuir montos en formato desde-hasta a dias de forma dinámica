@@ -1,0 +1,28 @@
+/*
+Ricardo Rincón
+Linkedin.com/in/nexus150
+
+Inspirado en https://www.sqlbi.com/articles/counting-working-days-in-dax/
+
+Este snippet sirve para aquellos casos donde se tienen movimientos, por ejemplo facturas, con fecha desde/hasta y el monto respectivo para ese intervalo
+y se requiere llevar el monto a días, pero dinamicamente dependiendo de la cantidad de días del periodo filtrado.
+
+Código sólo con fines educativos, ya que en volumen de datos grande ( decenas o centenas de millones de filas en la tabla de hechos), no es recomendable iterar 
+por cada fila y hay que adaptar la formula para iterar por combinaciones de fecha de inicio / fin o utilizar otro enfoque, siendo el más recomendable llevar el monto
+a valor diario directamente en el DW.
+*/
+
+Total Monto Distribuido = 
+VAR _monto_diario = 
+SUMX( ALL(Facturas) , 
+    VAR _dias = CALCULATE(
+        COUNTROWS ( 'Calendario'),
+        DATESBETWEEN ( 'Calendario'[Date],  Facturas[Desde], Facturas[Hasta]),
+        VALUES(Calendario[Date]),
+        ALL(Calendario)
+    )
+    VAR _monto = [Total Monto]
+    RETURN DIVIDE(_monto,_dias)        
+)
+
+RETURN _monto_diario
