@@ -1,0 +1,6 @@
+EVALUATE
+var _tables = SELECTCOLUMNS(FILTER(INFO.TABLES(), [name] in {"Calendar","Currency","Sales Country","SalesOrder","Customers"} ),
+						"@tablaID", [ID])
+
+var _resultado = GENERATE(filter(INFO.PARTITIONS(), [TableID] in _tables ), SELECTCOLUMNS(FILTER(INFO.TABLES(), [ID] = [TableID] ), "@tabla", [Name]) )
+return _resultado
