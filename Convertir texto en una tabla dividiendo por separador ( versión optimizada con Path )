@@ -1,0 +1,18 @@
+//Versión optimizada de mi código para transformar texto en una tabla rompiendo por un separador: https://github.com/nexus150/Dax/blob/master/Convertir%20un%20texto%20en%20una%20tabla%20dividiendo%20por%20separador
+// Inspirada en https://www.sqlbi.com/blog/marco/2024/05/18/strings-list-to-table-in-dax/ ( por inspirada quiero decir que es la propia función de Marco Russo y mi único cambio es cambiar el texto de busqueda por | para usar Path ;) )
+
+EVALUATE
+VAR _list = "21,02AB1,022,3AB,34,34234324234,adsasdsadsa,6567657,dfsdfsdfsdf21,02AB1,022,3AB,34,34234324234,adsasdsadsa,6567657,dfsdfsdfsdf"
+VAR _buscar = "02"
+VAR _texto = SUBSTITUTE(_list, _buscar , "|")
+VAR _length =
+    PATHLENGTH ( _texto )
+VAR Result =
+    SELECTCOLUMNS (
+        GENERATESERIES ( 1, _length ),
+        -- Use TEXT instead of INTEGER 
+        -- to get a list of strings
+        "Item", PATHITEM ( _texto, [value], TEXT )
+    )
+RETURN
+    Result
