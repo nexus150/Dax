@@ -1,0 +1,16 @@
+EVALUATE
+VAR _segmentos =
+    FILTER (
+        INFO.STORAGETABLECOLUMNSEGMENTS (),
+        RIGHT ( LEFT ( [TABLE_ID], 2 ), 1 ) <> "$"
+            && LEFT ( [COLUMN_ID], 3 ) = "Row"
+    )
+VAR _total_particiones =
+    GROUPBY (
+        _segmentos,
+        [TABLE_ID],
+        [PARTITION_NAME],
+        "@filas", SUMX ( CURRENTGROUP (), [RECORDS_COUNT] )
+    )
+RETURN
+    _total_particiones
