@@ -1,0 +1,7 @@
+Column with spaces = 
+//12644
+//127
+//0160
+VAR _fiveSpaces = REPT(UNICHAR(0160), 50 ) 
+VAR _textWithSpaces = _fiveSpaces & SUBSTITUTE('Table'[Column1], " ", _fiveSpaces) & _fiveSpaces & "|"
+RETURN _textWithSpaces
