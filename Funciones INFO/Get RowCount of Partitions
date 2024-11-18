@@ -1,0 +1,11 @@
+EVALUATE
+GROUPBY (
+    FILTER (
+        INFO.STORAGETABLECOLUMNSEGMENTS (),
+        SEARCH ( "RowNumber", [column_id], 1, -1 ) <> -1
+    ),
+    [dimension_name],
+    [partition_name],
+    [table_partition_number],
+    "@filas", SUMX ( CURRENTGROUP (), [records_count] )
+)
