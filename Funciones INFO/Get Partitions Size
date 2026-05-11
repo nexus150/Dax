@@ -1,0 +1,15 @@
+EVALUATE
+VAR _segmentos =
+    FILTER (
+        INFO.STORAGETABLECOLUMNSEGMENTS (),
+        RIGHT ( LEFT ( [TABLE_ID], 2 ), 1 ) <> "$"
+    )
+VAR _total_particiones =
+    GROUPBY (
+        _segmentos,
+        [TABLE_ID],
+        [PARTITION_NAME],
+        "@Size", SUMX ( CURRENTGROUP (), [USED_SIZE] )
+    )
+RETURN
+    _total_particiones
